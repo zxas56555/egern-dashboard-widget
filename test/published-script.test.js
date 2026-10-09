@@ -17,6 +17,30 @@ test('published script exposes only the documented default entry', () => {
   assert.match(moduleFile, /script_url: .*\/dist\/dashboard\.js\?v=0\.1\.1/);
 });
 
+test('module associates its widget with a same-named generic script', () => {
+  const scriptName = moduleFile.match(/generic:\s*\n\s+name: (.+)/)?.[1];
+  const widgetName = moduleFile.match(/widgets:\s*\n\s+- name: (.+)/)?.[1];
+  assert.equal(scriptName, '订阅仪表盘');
+  assert.equal(widgetName, scriptName);
+  assert.doesNotMatch(moduleFile, /script_name:/);
+});
+
+test('minimal diagnostic module renders without HTTP or storage APIs', async () => {
+  const module = await readFile(
+    new URL('../config/self-test.yaml', import.meta.url),
+    'utf8',
+  );
+  const selfTest = await import('../diagnostics/widget-probe.js');
+  const result = await selfTest.default({ app: { version: '2.20.0' } });
+  assert.equal(result.type, 'widget');
+  assert.ok(JSON.stringify(result).includes('自检成功'));
+  assert.ok(JSON.stringify(result).includes('2.20.0'));
+  const scriptName = module.match(/generic:\s*\n\s+name: (.+)/)?.[1];
+  const widgetName = module.match(/widgets:\s*\n\s+- name: (.+)/)?.[1];
+  assert.equal(scriptName, '仪表盘自检');
+  assert.equal(widgetName, scriptName);
+});
+
 test('published script executes after removing the default export declaration', async () => {
   // This is a compatibility smoke test, not an emulation of Egern's engine.
   const executable = source.replace(

@@ -1,0 +1,10 @@
+name: Egern Dashboard 自检
+description: 最小模块脚本执行检查，不读取订阅或修改 VPN。
+author: egern-dashboard-widget
+scriptings:
+  - generic:
+      name: 仪表盘自检
+      script_url: https://raw.githubusercontent.com/zxas56555/egern-dashboard-widget/main/diagnostics/widget-probe.js
+      timeout: 10
+widgets:
+  - name: 仪表盘自检
