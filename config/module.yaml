@@ -30,7 +30,7 @@ env_schema:
 scriptings:
   - generic:
       name: egern-dashboard
-      script_url: https://raw.githubusercontent.com/zxas56555/egern-dashboard-widget/main/src/dashboard.js
+      script_url: https://raw.githubusercontent.com/zxas56555/egern-dashboard-widget/main/dist/dashboard.js?v=0.1.1
       timeout: 20
 widgets:
   - name: 订阅仪表盘

@@ -18,7 +18,7 @@
 ## 手动导入本地脚本
 
 1. 在 Egern → 工具 → 脚本中新建脚本，名称 `egern-dashboard`，类型 `generic`，文件位置选本地，文件名 `dashboard.js`。
-2. 打开「编辑文件」，粘贴 `src/dashboard.js` 的全部内容并保存。此文件独立运行，不需要 npm、构建或其他 JS 文件。
+2. 打开「编辑文件」，粘贴 `dist/dashboard.js` 的全部内容并保存。这是专供 Egern 的独立发布脚本，只有一个默认入口，使用时不需要 npm 或其他 JS 文件。`src/dashboard.js` 保留本地测试用的命名导出，请不要直接导入 Egern。
 3. 在分析页左上角进入小组件画廊，新建「订阅仪表盘」，关联 `egern-dashboard`。
 4. 在小组件的 Env 中填写 `SUBSCRIPTION_URL`（自己的 HTTPS 订阅地址），可选填 `SUBSCRIPTION_NAME` 与 `NODE_NAME`。也可以在脚本 Env 中配置。
 5. 长按 iOS 主屏幕 → 添加 Egern 小组件 → 编辑小组件 → 选择「订阅仪表盘」。建议先使用中号。
@@ -59,6 +59,7 @@
 
 ```powershell
 npm install
+npm run build
 npm test
 npm run format:check
 npm run preview
@@ -67,6 +68,17 @@ npm run preview
 打开 http://127.0.0.1:4173，可切换七种尺寸、明暗外观、数据异常状态和名称。页面从实际 `src/dashboard.js` 生成同一份 DSL，并在浏览器近似渲染。预览不发送订阅请求，不开启 VPN，不输入真实订阅地址。
 
 浏览器预览不能验证 iOS 原生字体、WidgetKit 尺寸、SF Symbols 或 Egern URL 跳转；必须在设备上完成最终验证。
+
+修改 `src/dashboard.js` 后运行 `npm run build`，并将生成的 `dist/dashboard.js` 一起提交。`npm test` 会自动重新构建，检查发布文件只保留一个默认入口，并对未配置、演示数据和模拟订阅请求进行执行验证。这些检查不等同于 Egern 真机运行。
+
+### 仅显示组件名称时的排查
+
+若小组件画廊只出现「订阅仪表盘」名称，没有流量或配置提示，说明还未显示出脚本的预期内容；仅凭这个界面不能区分下载、执行和渲染失败。
+
+1. 在 Egern 中更新模块；此次兼容版本的脚本路径为 `dist/dashboard.js?v=0.1.1`，与初版地址不同。
+2. 在工具 → 脚本中找到 `egern-dashboard`，手动运行并查看运行错误。不要公开包含订阅 token 的完整错误文本。
+3. 在模块设置中暂时打开演示数据。演示模式不请求订阅，成功时应显示剩余 `161.5 GB` 和「开启 VPN」入口。
+4. 若仍只显示名称，记录 Egern 版本号和手动运行错误，再排查下载与运行兼容性。
 
 ## 设备验收
 
