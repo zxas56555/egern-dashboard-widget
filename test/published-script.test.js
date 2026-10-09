@@ -14,7 +14,7 @@ test('published script exposes only the documented default entry', () => {
   assert.match(source, /^export default async function \(ctx\)/m);
   assert.equal((source.match(/^export /gm) || []).length, 1);
   assert.doesNotMatch(source, /^import /m);
-  assert.match(moduleFile, /script_url: .*\/dist\/dashboard\.js\?v=0\.1\.1/);
+  assert.match(moduleFile, /script_url: .*\/dist\/dashboard\.js\?v=0\.2\.0/);
 });
 
 test('module associates its widget with a same-named generic script', () => {

@@ -177,3 +177,21 @@ test('entry function produces a widget from Egern context', async () => {
   assert.equal(result.type, 'widget');
   assert.ok(texts(result).includes('演示数据'));
 });
+
+test('home-screen widgets expose independent start and stop actions without a root URL', () => {
+  const data = { usage: parseUsage(HEADER), updatedAt: NOW, message: '已更新' };
+  function links(element) {
+    return [element.url, ...(element.children || []).flatMap(links)].filter(Boolean);
+  }
+  for (const family of [
+    'systemSmall',
+    'systemMedium',
+    'systemLarge',
+    'systemExtraLarge',
+  ]) {
+    const widget = renderDashboard(data, { NODE_NAME: '旧节点配置' }, family, NOW);
+    assert.equal(widget.url, undefined);
+    assert.deepEqual(links(widget), ['egern:/start', 'egern:/stop']);
+    assert.doesNotMatch(JSON.stringify(widget), /节点|旧节点配置|已连接|未连接/);
+  }
+});

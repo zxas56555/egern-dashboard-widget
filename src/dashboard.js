@@ -3,6 +3,7 @@ const GIB = 1024 ** 3;
 const MINUTE = 60 * 1000;
 const DAY = 24 * 60 * MINUTE;
 const START_URL = 'egern:/start';
+const STOP_URL = 'egern:/stop';
 const COLORS = {
   background: { light: '#F0F5F3', dark: '#101E1B' },
   surface: { light: '#DFEAE5', dark: '#20352E' },
@@ -213,13 +214,29 @@ function symbol(name, color = COLORS.accent, size = 14) {
   };
 }
 
-function powerButton(compact = false) {
-  return stack([symbol('power'), text('开启 VPN', 12, COLORS.accent, 'semibold')], {
-    url: START_URL,
-    height: compact ? 32 : 44,
-    padding: [0, 10, 0, 10],
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
+function powerButton(action, compact = false) {
+  const start = action === 'start';
+  const label = start ? '开启' : '关闭';
+  const color = start ? COLORS.accent : COLORS.warning;
+  return stack(
+    [
+      symbol('power', color, 12),
+      text(compact ? label : `${label} VPN`, 12, color, 'semibold'),
+    ],
+    {
+      url: start ? START_URL : STOP_URL,
+      height: 44,
+      padding: [0, compact ? 6 : 10, 0, compact ? 6 : 10],
+      backgroundColor: COLORS.surface,
+      borderRadius: 12,
+      ...(compact ? { flex: 1 } : {}),
+    },
+  );
+}
+
+function vpnControls(compact = false) {
+  return stack([powerButton('start', compact), powerButton('stop', compact)], {
+    gap: 6,
   });
 }
 
@@ -266,13 +283,12 @@ export function renderDashboard(
     (usage?.expiresAt != null && usage.expiresAt <= now);
   const remaining = formatBytes(usage?.remaining ?? null);
   const title = env.SUBSCRIPTION_NAME || '我的订阅';
-  const node = env.NODE_NAME || '未设置';
   const interval = boundedNumber(env.REFRESH_MINUTES, 15, 5, 1440) * MINUTE;
   const expiryRefresh = usage?.expiresAt > now ? usage.expiresAt : Infinity;
   const root = {
     type: 'widget',
-    padding: lock ? 0 : 12,
-    gap: 4,
+    padding: lock ? 0 : compact ? 10 : 12,
+    gap: compact ? 3 : 4,
     refreshAfter: new Date(
       Math.min(now + interval, date.nextMidnight, expiryRefresh),
     ).toISOString(),
@@ -333,13 +349,13 @@ export function renderDashboard(
         ? [text(data.message, 10, warning ? COLORS.warning : COLORS.secondary)]
         : []),
     ],
-    { direction: 'column', alignItems: 'start', gap: 3 },
+    { direction: 'column', alignItems: 'start', gap: compact ? 2 : 3 },
   );
   const metadata = stack(
     [
-      text('节点名称 · 手动配置', 10, COLORS.secondary),
-      text(node, 13, COLORS.primary, 'semibold'),
-      text(expiryLabel(usage, now, offset), 10, COLORS.secondary),
+      text('订阅有效期', 10, COLORS.secondary),
+      text(expiryLabel(usage, now, offset), 11, COLORS.primary, 'semibold'),
+      text('VPN 状态未知', 10, COLORS.secondary),
     ],
     { direction: 'column', alignItems: 'start', flex: 1, gap: 5 },
   );
@@ -364,9 +380,8 @@ export function renderDashboard(
   }
   root.children.push({ type: 'spacer' });
   if (compact) {
-    // iOS small widgets have a single tap target, so the whole widget starts VPN.
-    root.url = START_URL;
-    root.children.push(powerButton(true));
+    // Keep URLs on the individual controls; a root URL would make the card start VPN.
+    root.children.push(vpnControls(true));
   } else {
     const status = stack(
       [
@@ -386,7 +401,7 @@ export function renderDashboard(
       ],
       { direction: 'column', alignItems: 'start', gap: 3, flex: 1 },
     );
-    root.children.push(stack([status, powerButton()]));
+    root.children.push(stack([status, vpnControls()]));
   }
   return root;
 }

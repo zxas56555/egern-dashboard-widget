@@ -14,6 +14,13 @@ const sizes = {
 };
 const weights = { regular: 400, medium: 500, semibold: 600, bold: 700 };
 
+function actionFeedback(url) {
+  feedback.textContent =
+    url === 'egern:/stop'
+      ? '关闭操作：跳转至 egern:/stop，由 Egern 执行停止 VPN。'
+      : '开启操作：跳转至 egern:/start，由 Egern 执行启动 VPN。';
+}
+
 function resolveColor(value, theme) {
   return typeof value === 'object' ? value[theme] : value;
 }
@@ -27,7 +34,7 @@ function render(element, theme) {
     node.type = 'button';
     node.classList.add('dsl-action');
     node.addEventListener('click', () => {
-      feedback.textContent = `在 iOS 上跳转至 ${action}，由 Egern 执行开启 VPN。`;
+      actionFeedback(action);
     });
   }
   if (element.type === 'stack' || element.type === 'widget') {
@@ -123,7 +130,6 @@ function update() {
   };
   const env = {
     SUBSCRIPTION_NAME: document.querySelector('#name').value,
-    NODE_NAME: document.querySelector('#node').value,
   };
   const dsl = renderDashboard(data, env, family, now);
   const rendered = render(dsl, theme);
@@ -139,7 +145,7 @@ function update() {
     : resolveColor(dsl.backgroundColor, theme);
   widget.onclick = dsl.url
     ? () => {
-        feedback.textContent = `在 iOS 上跳转至 ${dsl.url}，由 Egern 执行开启 VPN。`;
+        actionFeedback(dsl.url);
       }
     : null;
   widget.tabIndex = dsl.url ? 0 : -1;

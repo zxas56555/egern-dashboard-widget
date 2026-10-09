@@ -9,10 +9,6 @@ env_schema:
   SUBSCRIPTION_NAME:
     name: 订阅名称
     default_value: 我的订阅
-  NODE_NAME:
-    name: 节点名称
-    description: 手动填写的展示名称，并非自动读取当前节点。
-    default_value: 未设置
   USER_AGENT:
     name: 请求 User-Agent
     default_value: Egern
@@ -30,13 +26,12 @@ env_schema:
 scriptings:
   - generic:
       name: 订阅仪表盘
-      script_url: https://raw.githubusercontent.com/zxas56555/egern-dashboard-widget/main/dist/dashboard.js?v=0.1.1
+      script_url: https://raw.githubusercontent.com/zxas56555/egern-dashboard-widget/main/dist/dashboard.js?v=0.2.0
       timeout: 20
 widgets:
   - name: 订阅仪表盘
     env:
       SUBSCRIPTION_NAME: 我的订阅
-      NODE_NAME: 未设置
       REFRESH_MINUTES: '15'
       TIMEZONE_OFFSET: '8'
       DEMO: 'false'
