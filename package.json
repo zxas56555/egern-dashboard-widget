@@ -1,0 +1,16 @@
+{
+  "name": "egern-dashboard-widget",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Egern 原生订阅仪表盘小组件",
+  "scripts": {
+    "test": "node --test",
+    "preview": "node tools/preview-server.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Egern · 小组件预览</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/preview.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="eyebrow">EGERN / WIDGET LAB</span>
+        <h1>订阅，一眼掌握。</h1>
+        <p>把流量、日期和连接入口，放在主屏幕上。</p>
+      </header>
+      <section class="workspace" aria-label="小组件设计预览">
+        <form id="controls">
+          <h2>预览设置</h2>
+          <label for="family">组件尺寸</label>
+          <select id="family">
+            <option value="systemMedium">中号 · 信息与快捷入口</option>
+            <option value="systemSmall">小号 · 流量与启动</option>
+            <option value="systemLarge">大号 · 完整订阅信息</option>
+            <option value="systemExtraLarge">超大号 · iPad</option>
+            <option value="accessoryRectangular">锁屏 · 矩形</option>
+            <option value="accessoryCircular">锁屏 · 圆形</option>
+            <option value="accessoryInline">锁屏 · 行内</option>
+          </select>
+          <label for="theme">外观</label>
+          <select id="theme">
+            <option value="dark">深色 · 森林绿</option>
+            <option value="light">浅色 · 雾白绿</option>
+          </select>
+          <label for="scenario">数据状态</label>
+          <select id="scenario">
+            <option value="normal">正常 · 演示数据</option>
+            <option value="over">流量超额</option>
+            <option value="expired">订阅到期</option>
+            <option value="stale">更新失败 · 上次数据</option>
+            <option value="missing">未配置订阅</option>
+            <option value="unknown">额度与到期时间未知</option>
+          </select>
+          <label for="name">订阅名称</label>
+          <input id="name" value="我的订阅" maxlength="60" />
+          <label for="node">节点名称（手动配置）</label>
+          <input id="node" value="香港 · 01" maxlength="100" />
+          <p class="hint">此页面只使用模拟数据，不读取订阅，也不操作 VPN。</p>
+        </form>
+        <div class="stage">
+          <div class="stage-label"><span>主屏幕预览</span><span>DEMO</span></div>
+          <div id="widget" aria-label="模拟 Egern 小组件"></div>
+          <p id="feedback" role="status">点击“开启 VPN”可查看原生跳转地址。</p>
+        </div>
+      </section>
+      <aside>
+        <h2>接入 Egern</h2>
+        <p>在 Egern 中导入脚本，填写订阅地址，再把「订阅仪表盘」添加到主屏幕。</p>
+        <p class="hint">
+          浏览器近似渲染同一份 Widget DSL，字体和间距以 iOS 实际效果为准。当前节点及 VPN
+          状态暂不自动读取。
+        </p>
+        <a
+          href="https://egernapp.com/zh-CN/docs/configuration/widgets/"
+          target="_blank"
+          rel="noreferrer"
+          >查看官方小组件文档 ↗</a
+        >
+      </aside>
+    </main>
+  </body>
+</html>
